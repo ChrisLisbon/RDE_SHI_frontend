@@ -146,7 +146,7 @@ export default class Diagram extends React.Component {
         }
         render() {
         	const vh = window.innerHeight * 0.01;
-			const px=vh*1.3
+			    const px=vh*1.3
 
           return (
             

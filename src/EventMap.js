@@ -7,6 +7,7 @@ import "leaflet-mouse-position";
 import "leaflet-measure"
 
 import {ObservationStationsTypesListGet} from './request_functions.js'
+import {map_height} from './system_functions.js'
 
 require('../node_modules/leaflet-measure/dist/leaflet-measure.css');
 
@@ -220,6 +221,7 @@ activeRSLayers = (eventData, activeRSLayers)=>{
 return layers
 }
 		render(){
+			const vh = window.innerHeight;
 			if (this.map!==undefined && this.state.setMiniMap==false){
 				this.setMiniMap()
 				this.setState((prevState) => {
@@ -258,7 +260,7 @@ return layers
 			return(
 					<div>
 						
-						<Map className='event-map'  center={this.props.center} zoom={13} bounds={bounds} ref={(ref) => {this.map = ref}}>
+						<Map style={{height: map_height(vh), width: '75%', margin:'0 0 0 25%', position: 'absolute', display: 'block', zIndex: 0}}  center={this.props.center} zoom={13} bounds={bounds} ref={(ref) => {this.map = ref}}>
 						    <TileLayer
 						      attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

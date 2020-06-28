@@ -9,12 +9,9 @@ import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
+import {font_size} from './system_functions.js' 
 
 const useStyles = makeStyles(theme => ({
-  box: {
-    height: '3vh',
-    
-  },
   margin: {
     margin: '0 0 0 0',
     fontSize: 11,
@@ -25,6 +22,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function EventCheckbox(props) {
   const classes = useStyles();
+  const vh = window.innerHeight
   const name=props.name
   const id = props.id
   const categ=props.categ
@@ -39,19 +37,19 @@ export default function EventCheckbox(props) {
   };
   
   return (
-    <div className={classes.box}>
+    
       <FormControlLabel className={classes.margin}
         control={
           <Checkbox
             checked={state[name]}
             onChange={handleChange(name, id, categ)}
             value={name}
-            icon={<CheckBoxOutlineBlankIcon style={{ fontSize: '2.5vh' }} />}
-            checkedIcon={<CheckBoxIcon style={{ fontSize: '2.5vh' }} />}
+            icon={<CheckBoxOutlineBlankIcon style={{ fontSize: font_size(vh, 2.5) }} />}
+            checkedIcon={<CheckBoxIcon style={{ fontSize: font_size(vh, 2.5) }} />}
           />
         }
-      label={<span style={{ fontSize: '1.8vh' }}>{props.name}</span>}
+      label={<span style={{ fontSize: font_size(vh, 1.8) }}>{props.name}</span>}
       />
-      </div>
+      
       )
     }

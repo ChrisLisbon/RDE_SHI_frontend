@@ -5,6 +5,7 @@ import Paper from '@material-ui/core/Paper';
 import EventCheckbox from './EventCheckbox.js';
 import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
+import {font_size} from './system_functions.js'
 
 export default class EventCommonLinks extends Component{
   constructor(props){
@@ -13,7 +14,7 @@ export default class EventCommonLinks extends Component{
      
     }
   }
-  createDocumentCard=(eventData)=>{
+  createDocumentCard=(eventData, vh)=>{
       if (eventData.common_links.length!==0){
               var allCards=eventData.common_links.map((common_links) => {
               var header = common_links.name_rus
@@ -26,18 +27,19 @@ export default class EventCommonLinks extends Component{
       }
       else{
           return <Card style={{ margin: 5, height: '20%'}} >      
-                  <Typography variant="body1" component="p" style={{margin: '25% 0', fontSize: '1.8vh'}} align='center'>
+                  <Typography variant="body1" component="p" style={{margin: '25% 0', fontSize: font_size(vh, 1.8)}} align='center'>
                   Вспомогательные ссылки отсутствуют
                   </Typography>
                 </Card>
       }
  }
  render(){
+      const vh = window.innerHeight
       const eventData=this.props.eventData
       return(
       
       <div style={{margin:'0'}}>
-          {this.createDocumentCard(eventData)}
+          {this.createDocumentCard(eventData, vh)}
       </div>
       
          )

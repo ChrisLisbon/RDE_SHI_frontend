@@ -10,6 +10,7 @@ import "leaflet-polylinedecorator"
 import AlertDialog from './PlaceTableDialog.js'
 
 import {API_settings} from './server_settings.js'
+import {map_height} from './system_functions.js'
 require('../node_modules/leaflet-minimap/dist/Control.MiniMap.min.css');
 
 var parse = require('wellknown')
@@ -19,6 +20,15 @@ async function GetVectorAsJson(link){
         let data = await response.json()
         return data
 }
+
+const map_width=(vh)=>{
+	if (vh>=920){
+        return '80vw'
+    }
+    if (vh<920){
+      return '78.5vw'
+    }
+}	
 
 class NewMap extends Component{
 	constructor(props){
@@ -81,6 +91,7 @@ getVectorsAsJson=()=>{
 	}
 }
 		render(){
+			const vh = window.innerHeight;
 			if (this.map!==undefined && this.state.setMiniMap==false){
 				this.setMiniMap()
 				this.setState((prevState) => {
@@ -121,7 +132,7 @@ getVectorsAsJson=()=>{
 						return(
 					<div>
 						
-						<Map className='map'  bounds={this.props.bounds} onZoom={this.handleZoom} ref={(ref) => {this.map = ref}}>
+						<Map style={{height: map_height(vh), width: map_width(vh), float: 'right', margin: '0 0 0 0', display: 'block', zIndex: 3}} bounds={this.props.bounds} onZoom={this.handleZoom} ref={(ref) => {this.map = ref}}>
 						    
 						    <TileLayer 
 						      attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'

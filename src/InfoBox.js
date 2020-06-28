@@ -5,41 +5,37 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import {font_size} from './system_functions.js'
 
 const useStyles = makeStyles({
-  
-
-  title: {
-    fontSize: 14,
-
-  },
-  box:{
-    
+  box:{    
     color: '#131E16',
+    overflow: 'auto'
   }
 });
 
 export default function InfoBox() {
   const classes = useStyles();
+  const vh = window.innerHeight;
   
   return (
     
     <Card className={classes.box}>
-      <CardContent>
+      <CardContent >
 
-        <Typography variant="h5" component="h2" style={{fontSize: '2.5vh'}}>
+        <Typography variant="h5" component="h2" style={{fontSize: font_size(vh, 2.3)}}>
           Информационный блок
         </Typography>
 
-        <Typography variant="body2" component="p" style={{fontSize: '1.5vh'}}>
+        <Typography variant="body2" component="p" style={{fontSize: font_size(vh, 1.5)}}>
           Информация об организаторах 
         </Typography>
-        <Typography variant="body2" component="p" style={{fontSize: '1.5vh'}}>
+        <Typography variant="body2" component="p" style={{fontSize: font_size(vh, 1.5)}}>
           Информация о проекте 
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small" href="#outlined-buttons">{<span style={{fontSize: '1.5vh'}}>Подробнее</span>}</Button>
+        <Button size="small" href="#outlined-buttons">{<span style={{fontSize: font_size(vh, 1.5)}}>Подробнее</span>}</Button>
       </CardActions>
     </Card>
     

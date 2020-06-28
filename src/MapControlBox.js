@@ -9,25 +9,21 @@ import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
+import {font_size} from './system_functions.js'
 
 const useStyles = makeStyles(theme => ({
   
-  box:{
-    height: '3vh',
-
-  },
   margin: {
     margin: '0 0 0 0',
-    
-    minHeight:0,
-    height: '4.5vh'
   },
 
 }));
 
 export default function MapControlBox(props) {
   const classes = useStyles();
-const [state, setState] = React.useState({
+  const vh = window.innerHeight;
+
+  const [state, setState] = React.useState({
     checkedA: false,
     checkedB: false,
     checkedC: false,
@@ -40,22 +36,23 @@ const [state, setState] = React.useState({
   };
 
   return (
-     <Card style={{height: '4.5vh'}}>
-    <div className={classes.box}>
+     <Card style={{overflow: 'auto'}}>
+      <CardContent style={{padding: '0 0'}}>
+    
       <FormControlLabel className={classes.margin}
         control={
           <Checkbox
             checked={props.regionsBordersActive}
             onChange={handleChange('checkedA')}
             value="checkedB"
-            icon={<CheckBoxOutlineBlankIcon style={{ fontSize: '2.5vh', margin:'0'}} />}
-            checkedIcon={<CheckBoxIcon style={{ fontSize: '2.5vh', margin:'0' }} />}
+            icon={<CheckBoxOutlineBlankIcon style={{ fontSize: font_size(vh, 2.5), margin:'0'}} />}
+            checkedIcon={<CheckBoxIcon style={{ fontSize: font_size(vh, 2.5), margin:'0' }} />}
           />
         }
-      label={<span style={{ fontSize: '1.8vh', margin: '0', height: '1.8vh' }}>Отобразить границы регионов</span>}
+      label={<span style={{ fontSize: font_size(vh, 1.8), margin: '0', height: font_size(vh, 1.8) }}>Отобразить границы регионов</span>}
       />
-      </div>
       
+      </CardContent>
        </Card> 
      
    
