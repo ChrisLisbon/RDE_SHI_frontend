@@ -1,0 +1,60 @@
+.map {
+	height: 90vh;
+	width: 80%;
+	float: right;
+	margin:0,0;
+	display: block;
+    z-index: 3;
+
+}
+.left-menu{
+	width: 18%;
+	float: left;
+	margin: 1% 1% 0 1%;
+	display: block;
+    z-index: 5;
+    position: relative;
+    height: 85vh;
+}
+
+.control-btn{
+	width: 80%;
+	height: 20%;
+}
+.chart{
+	height: 30vh;
+
+	
+}
+.chart-div{
+	margin: 3%;
+	height: 10vh;
+	width: 50%;
+
+}
+.infobox{
+	height: 20vh;
+}
+
+.header{
+	height: 10vh;
+}
+.event-map {
+	height: 45vh;
+	width: 50%;
+	float: center;
+	
+	display: block;
+    z-index: 3;
+
+}
+.event-documents-menu{
+	height: 90vh;
+	width: 25%;
+	float: left;
+}
+body {
+  margin: 0;
+  background-color: #97C8B3 }
+main {
+  display: block; }
