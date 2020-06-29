@@ -87,7 +87,18 @@ box:{
 	  const [value, setValue] = React.useState(0);
 
     const vh = window.innerHeight
-
+    const tab_vh=(vh)=>{
+      if (vh>=920){
+        return '88%'
+      }
+      if (vh<920){
+        const header_vh=64.4
+        const f_tab_vh=(vh-64.4)/2
+        console.log(f_tab_vh)
+        console.log(f_tab_vh-51.336)
+        return f_tab_vh-51.336
+      }
+    }
 	  const handleChange = (event, newValue) => {
 	    setValue(newValue);
 	  };
@@ -96,15 +107,15 @@ box:{
     <div className={classes.root}>
       <AppBar style={{backgroundColor:'#1D8A6B', minHeight: 0, height: font_size(vh, 5.58)}} position="static">                
         <Tabs style={{backgroundColor:'#1D8A6B', minHeight: 0, height: font_size(vh, 5.58)}} value={value} onChange={handleChange} indicatorColor="primary" aria-label="simple tabs example">  
-          <Tab style={{margin: '0.5%', height: font_size(vh, 5.58), minHeight: 0, width: '44%', minWidth:'20px'}} label={<span style={{ fontSize: font_size(vh, 1.5) }}>Новости</span>} {...a11yProps(0)} />
-          <Tab style={{margin: '0.5%', height: font_size(vh, 5.58), minHeight: 0, width: '54%', minWidth:'20px'}} wrapped label={<span style={{ fontSize: font_size(vh, 1.5) }}>Вспомогательные ссылки</span>} {...a11yProps(1)} />
+          <Tab style={{margin: '0.5%', height: font_size(vh, 5.58), minHeight: 0, width: '44%', minWidth:'20px'}} label={<span style={{ fontSize: font_size(vh, 1.5, 'text') }}>Новости</span>} {...a11yProps(0)} />
+          <Tab style={{margin: '0.5%', height: font_size(vh, 5.58), minHeight: 0, width: '54%', minWidth:'20px'}} wrapped label={<span style={{ fontSize: font_size(vh, 1.5, 'text') }}>Вспомогательные ссылки</span>} {...a11yProps(1)} />
         </Tabs>
       </AppBar>
       <ThemeProvider theme={ZeroPadding}>
-      <TabPanel  style={{padding: 0,	margin: 0,  height: '88%',  maxHeight: '88%',  overflow: 'auto'}} value={value} index={0}>
+      <TabPanel  style={{padding: 0,	margin: 0,  height: tab_vh(vh),  maxHeight: tab_vh(vh),  overflow: 'auto'}} value={value} index={0}>
         	<EventNews eventData = {eventData}/>
       </TabPanel>
-      <TabPanel  className={classes.box} value={value} index={1}>
+      <TabPanel  style={{padding: 0,	margin: 0,  height: tab_vh(vh),  maxHeight: tab_vh(vh),  overflow: 'auto'}} value={value} index={1}>
       		<EventCommonLinks eventData = {eventData} />
       </TabPanel>
 

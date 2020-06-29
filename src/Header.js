@@ -29,8 +29,8 @@ export default function Header(props) {
 
   const returnGetDataButton=(event_id)=>{
     if(event_id!==undefined){
-      return <Button color="inherit" onClick={()=>downloadWindowOpen()}>
-                      <span style={{ fontSize: font_size(vh, 1.5) }}>Скачать данные</span>
+      return <Button wrapped color="inherit" onClick={()=>downloadWindowOpen()}>
+                      <span style={{ fontSize: font_size(vh, 1.5, 'text') }}>Скачать данные</span>
              </Button>
     }
   }
@@ -45,19 +45,19 @@ export default function Header(props) {
         </ButtonBase>
 
           <div style={{flexGrow: 1}}>
-          <Typography  style={{flexGrow: 1, fontSize: font_size(vh, 2.5), margin: '0 1vw '}} >
+          <Typography  style={{flexGrow: 1, fontSize: font_size(vh, 2.5, 'text'), margin: '0 1vw '}} >
             Опасные гидрологические явления
           </Typography>
-          <Typography  style={{fontSize: font_size(vh, 1.7), flexGrow: 1, margin: '0 1.5vw ', padding: 0}}>
+          <Typography  style={{fontSize: font_size(vh, 1.7, 'text'), flexGrow: 1, margin: '0 1.5vw ', padding: 0}}>
             Государственный Гидрологический Институт
           </Typography>
           </div>
-          <Button color="inherit" href='#'>
-                    <span style={{ fontSize: font_size(vh, 1.5) }}>Руководство пользователя</span>
+          <Button wrapped color="inherit" href='#'>
+                    <span style={{ fontSize: font_size(vh, 1.5, 'text') }}>Руководство пользователя</span>
           </Button>
           {returnGetDataButton(props.event_id)}
-          <Button color="inherit" onClick={()=>adminWindowOpen()}>
-                    <span style={{ fontSize: font_size(vh, 1.5) }}>Административная панель</span>
+          <Button wrapped color="inherit" onClick={()=>adminWindowOpen()}>
+                    <span style={{ fontSize: font_size(vh, 1.5, 'text') }}>Административная панель</span>
           </Button>
           
           

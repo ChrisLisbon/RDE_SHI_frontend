@@ -1,9 +1,12 @@
-const font_size=(vh, value)=>{
+const font_size=(vh, value, flag=null)=>{
     if (vh>=920){
         return String(value)+'vh'
     }
-    if (vh<920){
+    if (vh<920 && flag==null){
       return String(9.2*value)+'px'
+    }
+    if (vh<920 && flag=='text'){
+      return String(9.2*value)*0.8+'px'
     }
   }
 

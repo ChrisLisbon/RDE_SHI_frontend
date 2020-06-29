@@ -23,10 +23,10 @@ async function GetVectorAsJson(link){
 
 const map_width=(vh)=>{
 	if (vh>=920){
-        return '80vw'
+        return '80%'
     }
     if (vh<920){
-      return '78.5vw'
+      return '78.5%'
     }
 }	
 
@@ -132,7 +132,7 @@ getVectorsAsJson=()=>{
 						return(
 					<div>
 						
-						<Map style={{height: map_height(vh), width: map_width(vh), float: 'right', margin: '0 0 0 0', display: 'block', zIndex: 3}} bounds={this.props.bounds} onZoom={this.handleZoom} ref={(ref) => {this.map = ref}}>
+						<Map style={{height: map_height(vh), width: '80%', float: 'right', margin: '0 0 0 0', display: 'block', zIndex: 3}} bounds={this.props.bounds} onZoom={this.handleZoom} ref={(ref) => {this.map = ref}}>
 						    
 						    <TileLayer 
 						      attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
