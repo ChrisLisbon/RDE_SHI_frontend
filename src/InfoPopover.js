@@ -5,6 +5,7 @@ import Typography from '@material-ui/core/Typography';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import IconButton from '@material-ui/core/IconButton';
 import EventInfoText from './EventInfoText'
+import {font_size} from './system_functions.js'
 
 const useStyles = makeStyles(theme => ({
   typography: {
@@ -41,11 +42,12 @@ export default function InfoPopover(props) {
 
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
+  const vh = window.innerHeight
 
   return (
-    <div style={{height:'5.58vh', width:'5.58vh'}}>
-    <IconButton  style={{height:'5.58vh', width:'5.58vh', padding:0}} aria-describedby={id}  onClick={handleClick}  className={classes.button} >
-            <HelpOutlineIcon style={{height:'3vh', width:'3vh', padding:0}}/>
+    <div style={{height:font_size(vh, 5.58), width:font_size(vh, 5.58)}}>
+    <IconButton  style={{height:font_size(vh, 5.58), width:font_size(vh, 5.58), padding:0}} aria-describedby={id}  onClick={handleClick}  className={classes.button} >
+            <HelpOutlineIcon style={{height:font_size(vh, 3), width:font_size(vh, 3), padding:0}}/>
     </IconButton>
       
       <Popover

@@ -16,7 +16,6 @@ import DiagramCard from './DiagramCard.js'
 import Tooltip from '@material-ui/core/Tooltip';
 
 
-
 const useStyles =  makeStyles(theme => ({
   root: {
     display: 'flex',
@@ -25,7 +24,9 @@ const useStyles =  makeStyles(theme => ({
 
 
   menuButton: {
-     margin: '87vh 0 0 23vW',
+     marginLeft: '23vW',
+     marginBottom:0,
+     marginRight:0,
      position: 'relative',
      zIndex: 10, 
      background: 'rgba(29, 138, 107, 0.5)',
@@ -37,7 +38,9 @@ const useStyles =  makeStyles(theme => ({
 
   },
   menuButton2: {
-     margin: '87vh 0 0 11vW',
+     marginLeft: '11vW',
+     marginBottom:0,
+     marginRight:0,
      position: 'relative',
      zIndex: 10, 
      background: 'rgba(29, 138, 107, 0.5)',
@@ -62,8 +65,7 @@ const useStyles =  makeStyles(theme => ({
   },
 
   drawerPaper: {
-    width: '50%',
-    height: '52.08vh', 
+    width: '50%',                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
     margin: '0 25% 0 25%',
     background: 'transparent',
     overflow: 'hidden',
@@ -71,7 +73,6 @@ const useStyles =  makeStyles(theme => ({
   },
     drawerPaper1: {
     width: '25%',
-    height: '52.08vh', 
     margin: '0 25% 0 25%',
     background: 'transparent',
     border: 0
@@ -80,7 +81,7 @@ const useStyles =  makeStyles(theme => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    height: '5.58vh', 
+    height: '5.58vh',
   },
 
 
@@ -90,15 +91,25 @@ export default function PanelBottom(props) {
   const classes = useStyles();
   const theme = useTheme();
   const panelOpen = props.panelOpen
+  const vh = window.innerHeight;
 
-  const [state, setState] = React.useState({
-    
+  const [state, setState] = React.useState({    
     fullWidthW: false,
     flag:false
   });
 
 
-
+  const buttonMarginTopStyle=(vh)=>{
+    if (vh>=920){
+      const mg=87
+      return {marginTop: String(mg)+'px'}
+    }
+    if (vh<920){
+      const button_vh=vh*0.01*5.58
+      const mg=vh - 64.4 - button_vh
+      return {marginTop: String(mg)+'px'}
+    }
+  }
   
  const paperWidth = (fullWidthOpen) => {
     if (fullWidthOpen==true){
@@ -109,28 +120,27 @@ export default function PanelBottom(props) {
     }
 
  }
- const buttonMargin = (fullWidthOpen)=>{
-  if (fullWidthOpen==true){
+  const buttonMargin = (fullWidthOpen)=>{
+    if (fullWidthOpen==true){
       return classes.menuButton
     }
     if (fullWidthOpen==false){
       return classes.menuButton2
     }
- }
-  const setDrawerWidth = () => event=>{
-    
+  }
+  const setDrawerWidth = () => event=>{    
     setState({...state,fullWidthW: true, flag:true});
   };
 
   return (
-    <div >
-      
+    <div >    
 
         <Tooltip placement="top" title="Показать">
           <IconButton
             color="inherit"
             onClick={()=>props.handleDrawerOpen()}
             edge="start"
+            style={buttonMarginTopStyle(vh)}
             className={clsx(buttonMargin(state.fullWidthW), panelOpen && classes.hide)}
           >
             <ArrowDropUpIcon />
