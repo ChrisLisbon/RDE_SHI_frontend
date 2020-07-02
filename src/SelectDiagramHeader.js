@@ -49,8 +49,8 @@ export default function SimpleSelect(props) {
           
 		>
 
-          <MenuItem value={'water_discharge'}>{<span style={{ fontSize: font_size(vh, 1.8) }}>Расход воды</span>}</MenuItem>
-          <MenuItem value={'water_level'}>{<span style={{ fontSize: font_size(vh, 1.8) }}>Уровень воды</span>}</MenuItem>
+          <MenuItem value={'water_discharge'}>{<span style={{ fontSize: font_size(vh, 1.8, 'text') }}>Расход воды</span>}</MenuItem>
+          <MenuItem value={'water_level'}>{<span style={{ fontSize: font_size(vh, 1.8, 'text') }}>Уровень воды</span>}</MenuItem>
 
         </Select>
         
@@ -72,8 +72,8 @@ export default function SimpleSelect(props) {
 	          
 			>
 
-	          <MenuItem value={'air_temperature'}>{<span style={{ fontSize: font_size(vh, 1.8) }}>Температура воздуха</span>}</MenuItem>
-	          <MenuItem value={'precipitations'}>{<span style={{ fontSize: font_size(vh, 1.8) }}>Количество осадков</span>}</MenuItem>
+	          <MenuItem value={'air_temperature'}>{<span style={{ fontSize: font_size(vh, 1.8, 'text') }}>Температура воздуха</span>}</MenuItem>
+	          <MenuItem value={'precipitations'}>{<span style={{ fontSize: font_size(vh, 1.8, 'text') }}>Количество осадков</span>}</MenuItem>
 
 	        </Select>
 	        

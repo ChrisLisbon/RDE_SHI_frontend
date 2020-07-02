@@ -28,11 +28,18 @@ const useStyles = makeStyles(theme => ({
 export default function EventMediaButton(props) {
   const classes = useStyles();
   const vh = window.innerHeight
-
+  const btn_height=(vh)=>{
+    if (vh>=920){
+      return '6.8vh'
+    }
+    if (vh<920){
+      return font_size(vh, 4.8)
+    }
+  }
   return (
     <div style={{float: 'right'}}>
 
-      <Fab variant="extended" style={{height: font_size(vh, 6.8)}} className={classes.fab} onClick={()=>props.dialogOpen()}>
+      <Fab variant="extended" style={{height: btn_height(vh)}} className={classes.fab} onClick={()=>props.dialogOpen()}>
         <PhotoLibraryIcon style={{height: font_size(vh, 2.5)}} className={classes.extendedIcon} />        
         <span style={{ fontSize: font_size(vh, 1.5) }}>Медиафайлы</span>
       </Fab>

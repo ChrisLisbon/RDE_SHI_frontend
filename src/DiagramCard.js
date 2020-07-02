@@ -52,11 +52,7 @@ function a11yProps(index) {
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
-    backgroundColor: theme.palette.background.paper,  
-    
-    height: '46.5vh',
-
-
+    backgroundColor: theme.palette.background.paper,
   },
   bar:{
     backgroundColor:'#1D8A6B',
@@ -83,6 +79,28 @@ export default function DiagramCard(props) {
   const stationType = props.clickedStationType
   const eventData = props.eventData
   const vh = window.innerHeight;
+  const tab_vh=(vh)=>{
+    if (vh>=920){
+      return '88%'
+    }
+    if (vh<920){
+      const header_vh=64.4
+      const f_tab_vh=(vh-64.4)/2
+      console.log(f_tab_vh)
+      console.log(f_tab_vh-51.336)
+      return f_tab_vh-51.336
+    }
+  }
+  const root_vh=(vh)=>{
+    if (vh>=920){
+      return '46.5vh'
+    }
+    if (vh<920){
+      const header_vh=64.4
+      const f_tab_vh=(vh-64.4)/2
+      return f_tab_vh
+    }
+  }
   const dataStart=moment(eventData.event_start_date, 'DDMMYYYYTHHmmss').format('DD.MM.YYYY')
   const dataEnd=moment(eventData.event_end_date, 'DDMMYYYYTHHmmss').format('DD.MM.YYYY')
 
@@ -273,7 +291,7 @@ const sortedDict=eventData.meteo_observations.map((meteo_observations)=>{
   
 
     return (
-    <div className={classes.root}>
+    <div style={{height: root_vh(vh)}} className={classes.root}>
       <AppBar style={{height: font_size(vh, 5.58)}} className={classes.bar} position="static">
         
           <Tabs style={{height: font_size(vh, 5.58)}} className={classes.bar2} value={state.value} onChange={handleChangeTabs} indicatorColor="primary">
@@ -289,9 +307,9 @@ const sortedDict=eventData.meteo_observations.map((meteo_observations)=>{
                          meanSpeed={eventData.mean_speed}
                          reason={eventData.reason}/>
           
-          <Tab style={{height: font_size(vh, 5.58)}} className={classes.barlabel}label={<span style={{ fontSize: font_size(vh, 1.5)}}>График</span>} {...a11yProps(1)} />
-          <Tab style={{height: font_size(vh, 5.58)}} className={classes.barlabel}label={<span style={{ fontSize: font_size(vh, 1.5)}}>Таблица</span>} {...a11yProps(2)} />
-          <Typography style={{fontSize: font_size(vh, 1.8), height: font_size(vh, 5.58), paddingTop: font_size(vh, 1.39), paddingBottom: font_size(vh, 2.39)}} className={classes.label}  variant="body1" component="p">Выберите тип данных:</Typography>
+          <Tab style={{height: font_size(vh, 5.58)}} className={classes.barlabel}label={<span style={{ fontSize: font_size(vh, 1.5, 'text')}}>График</span>} {...a11yProps(1)} />
+          <Tab style={{height: font_size(vh, 5.58)}} className={classes.barlabel}label={<span style={{ fontSize: font_size(vh, 1.5, 'text')}}>Таблица</span>} {...a11yProps(2)} />
+          <Typography style={{fontSize: font_size(vh, 1.8, 'text'), height: font_size(vh, 5.58), paddingTop: font_size(vh, 1.39), paddingBottom: font_size(vh, 2.39)}} className={classes.label}  variant="body1" component="p">Выберите тип данных:</Typography>
           <SimpleSelect stationType = {stationType}  setValueType={(valueType)=>setValueType(valueType)} valueType={valueType} 
           setNewValueTypeAfterChangingStationType={()=>setNewValueTypeAfterChangingStationType()}/>
           
@@ -299,10 +317,10 @@ const sortedDict=eventData.meteo_observations.map((meteo_observations)=>{
       </AppBar>
 
       <ThemeProvider theme={ZeroPadding}>
-      <TabPanel  value={state.value} index={1}>
+      <TabPanel style={{height: tab_vh(vh), maxHeight: tab_vh(vh)}} value={state.value} index={1}>
         <Diagram data = {data}/>
       </TabPanel>
-      <TabPanel  value={state.value} index={2}>  
+      <TabPanel style={{height: tab_vh(vh), maxHeight: tab_vh(vh), overflow: 'auto'}} value={state.value} index={2}>  
         {returnTable(stationType)}
       </TabPanel>
       </ThemeProvider>  

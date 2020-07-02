@@ -21,16 +21,27 @@ export default function EventInfoText(props) {
   const margin=props.margin;
   
   const vh = window.innerHeight
-
+  const tab_vh=(vh)=>{
+    if (vh>=920){
+      return '40.92vh'
+    }
+    if (vh<920){
+      const header_vh=64.4
+      const f_tab_vh=(vh-64.4)/2
+      console.log(f_tab_vh)
+      console.log(f_tab_vh-51.336)
+      return f_tab_vh-51.336
+    }
+  }
 return (
 <Paper style={{height:'auto',  margin:{margin}, overflow: 'auto', background:'transparent'}}>
       
           <CardContent style={{background: 'rgba(29, 138, 107, 0.8)', height: font_size(vh, 5.58), padding: '0 0'}}>
-          <Typography variant="body1" component="p" align='center' style={{padding: font_size(vh, 0.5), fontSize: font_size(vh, 1.8)*0.8}}>
+          <Typography variant="body1" component="p" align='center' style={{padding: font_size(vh, 0.5), fontSize: font_size(vh, 1.5)}}>
             <b>Событие: {name}</b>
           </Typography>
         </CardContent>
-        <CardContent  style={{background: 'rgba(255, 255, 255, 0.8)', overflow: 'auto', height: '38.92vh', padding: '2vh 2vh 0 2vh'}}>
+        <CardContent  style={{background: 'rgba(255, 255, 255, 0.8)', overflow: 'auto', height: tab_vh(vh),  maxHeight: tab_vh(vh), padding: '0 2vh 0 2vh'}}>
         <Typography variant="body2" component="p" style={{fontSize: font_size(vh, 1.5)}}>
           <b><i>Начало события:</i></b> {dataStart}
           <br/>

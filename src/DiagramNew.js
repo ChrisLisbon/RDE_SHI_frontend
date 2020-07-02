@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import ReactApexChart from "react-apexcharts";
+import {font_size} from './system_functions.js'
 
 export default class Diagram extends React.Component {
         constructor(props) {
@@ -10,6 +11,7 @@ export default class Diagram extends React.Component {
           };
         }
         series=(dict)=>{
+          
         	const list=[{
 			              name: dict.label,
 			              type: 'area',
@@ -17,12 +19,31 @@ export default class Diagram extends React.Component {
 			            }]
 			
         return list
-      	}
-        options=(dict, px)=> {
+        }
+        get_font_size=(vh)=>{
+          if (vh>=920){
+            return font_size(vh, 1.3, 'text').replace('.', '').replace('vh', 'px')
+          }
+          if (vh<920){
+            return font_size(vh, 1.3, 'text')
+          }
+        }
+        tab_vh=(vh)=>{
+          if (vh>=920){
+            return '37.92vh'
+          }
+          if (vh<920){
+            const header_vh=64.4
+            const f_tab_vh=(vh-64.4)/2
+            console.log(f_tab_vh)
+            console.log(f_tab_vh-51.336)
+            return f_tab_vh-51.336
+          }
+        }
+        options=(dict, vh)=> {
           const list = []
           console.log(dict.dangerValues)
-          if (dict.Parameter!==undefined){
-              
+          if (dict.Parameter!==undefined){              
               dict.dangerValues.forEach((el)=>{   
                 console.log(el)             
                 const oneDict={y: el.value,
@@ -38,7 +59,7 @@ export default class Diagram extends React.Component {
                 list.push(oneDict)
                 console.log(list)
               })}
-
+        
         return {
               chart: {
                 height:'100%',
@@ -94,7 +115,7 @@ export default class Diagram extends React.Component {
                   title: {
                     text: dict.label,
                     style: {
-				                fontSize: '1.3vh',
+				                fontSize: this.get_font_size(vh),
 				            },
                   },
                   labels: {
@@ -103,11 +124,11 @@ export default class Diagram extends React.Component {
 				        	minHeight: undefined,
           					maxHeight: undefined,
 				            style: {
-				                fontSize: '1.3vh',
+				                fontSize: this.get_font_size(vh),
 				            },
 				            hideOverlappingLabels: true,
 				        	showDuplicates: false,
-				       },
+				       }, 
                 },
               xaxis: {	width:'100%',
 				        labels: {
@@ -119,7 +140,7 @@ export default class Diagram extends React.Component {
 				        	minHeight: undefined,
           					maxHeight: undefined,
 				            style: {
-				                fontSize: px,
+				                fontSize: this.get_font_size(vh),
 				            },
 				            
 				       },
@@ -145,14 +166,13 @@ export default class Diagram extends React.Component {
             }
         }
         render() {
-        	const vh = window.innerHeight * 0.01;
-			    const px=vh*1.3
+        	const vh = window.innerHeight;
 
-          return (
-            
 
-      <div style={{width:"98%", height:"37.92vh", margin:"2vh 1% 0", minHeight: 0}}>
-  <ReactApexChart options={this.options(this.props.data, px)} series={this.series(this.props.data)} type="line"  height="100%"/>
+          return (           
+
+      <div style={{width:"98%", height: this.tab_vh(vh), margin:"2vh 1% 0", minHeight: 0}}>
+  <ReactApexChart options={this.options(this.props.data, vh)} series={this.series(this.props.data)} type="line"  height="100%"/>
 </div>
           );
         }

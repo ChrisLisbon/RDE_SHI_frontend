@@ -15,6 +15,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { green,red } from '@material-ui/core/colors';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
+import {font_size} from './system_functions.js'
 
 import {API_settings} from './server_settings.js'
 
@@ -51,22 +52,20 @@ export default class EventApp extends Component{
 	}
 
 
-getMuiTheme2 = () => createMuiTheme({
-    overrides: {
-
-        
+getMuiTheme2 = (vh) => createMuiTheme({
+    overrides: {        
         MuiAutocomplete:{
           inputRoot:{
             '&[class*="MuiOutlinedInput-root"]':{
               padding:0,
-              height:'5vh',
+              height: font_size(vh, 5),
               '& $input': {
                   padding: '0',
-                  fontSize: '1.8vh',
+                  fontSize: font_size(vh, 1.8),
                 },
               '& $endAdornment': {
-                  right: '1vh',
-                  top:'0.5vh'
+                  right: font_size(vh, 1),
+                  top:font_size(vh, 0.5)
                 },
             },
             endAdornment:{
@@ -82,20 +81,20 @@ getMuiTheme2 = () => createMuiTheme({
         },
         PrivateNotchedOutline:{
           root:{
-              height: '5vh'
+              height: font_size(vh, 5)
             
           }
         },
         
         MuiFormControl:{
           root:{            
-              height: '5vh'
+              height: font_size(vh, 5)
             
           }
         },
         MuiFormLabel:{
           root:{
-            fontSize:'1.8vh'
+            fontSize:font_size(vh, 1.8)
           }
         },
         MuiInputLabel:{
@@ -105,16 +104,16 @@ getMuiTheme2 = () => createMuiTheme({
         },
         MuiSvgIcon:{
           root:{
-            height:'3vh',
-            width:'3vh'
+            height:font_size(vh, 3),
+            width:font_size(vh, 3)
           }
         },
         MuiInputBase: {
           root: {
-            fontSize: '1.8vh',
+            fontSize: font_size(vh, 1.8),
           },
           input:{
-          	fontSize: '1.8vh',
+          	fontSize: font_size(vh, 1.8),
           }
         },
 
@@ -344,12 +343,14 @@ getMuiTheme2 = () => createMuiTheme({
 				}
 	}
 
-	returnAutoComp=(state)=>{
+
+
+	returnAutoComp=(state, vh)=>{
 			if (state==true){
 					return <div style={{display:'inline-block', float:'right', width:'17vw', margin: '1vw '}}>
 							<Card style={{padding:'1.3vh 0.5vw 0.5vh 0.5vw ', position: "relative", zIndex:2000}}>
-								<MuiThemeProvider theme={this.getMuiTheme2()}>
-				                <Autocomplete style={{height:'5vh'}}
+								<MuiThemeProvider theme={this.getMuiTheme2(vh)}>
+				                <Autocomplete style={{height: font_size(vh, 5)}}
 				                    value={this.state.clickedStationObj}             
 				                    noOptionsText='Нет совпадений'
 				                    options={this.state.eventData.observation_stations}
@@ -367,6 +368,7 @@ getMuiTheme2 = () => createMuiTheme({
 	}
 
 		render(){
+
 			if (this.state.eventData!==null){
 				document.title = this.state.eventData.name_rus;
 			}
@@ -374,7 +376,8 @@ getMuiTheme2 = () => createMuiTheme({
 			if (this.state.firstDataGetState==false){
 				this.setIdEventData(this.state.firstDataGetState)
 			}
-
+			
+  			const vh = window.innerHeight
 
 			return(
 				<div>
@@ -385,7 +388,7 @@ getMuiTheme2 = () => createMuiTheme({
 				{this.returnEventMap(this.state.firstDataGetState)}
 
 				{this.returnEventMediaButton(this.state.firstDataGetState)}
-				{this.returnAutoComp(this.state.firstDataGetState)}		 
+				{this.returnAutoComp(this.state.firstDataGetState, vh)}		 
 							
 				{this.returnPanelBottom(this.state.firstDataGetState)}		
 				

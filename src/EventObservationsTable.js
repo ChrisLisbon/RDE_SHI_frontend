@@ -1,6 +1,7 @@
 import MUIDataTable from "mui-datatables";
 import React, {Component} from 'react'
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
+import {font_size} from './system_functions.js'
 var moment = require('moment');
 moment().format();
 
@@ -13,13 +14,13 @@ export default class EventObservationsTable extends Component{
     }
   }
 
-  getMuiTheme = () => createMuiTheme({
+  getMuiTheme = (vh) => createMuiTheme({
     overrides: {
 
         MUIDataTableHeadCell: {
           root: {
             color: "#a6a6a6",
-            fontSize: "1.5vh",
+            fontSize: font_size(vh, 1.5),
             minWidth:0,
             maxHeight:'7vh',
           padding:'1vh 0 1vh 1vw'
@@ -29,12 +30,13 @@ export default class EventObservationsTable extends Component{
         root: {
           backgroundColor: "#FFF",
           minWidth:0,
-          padding:'1vh 0 1vh 1vw'
+          padding:'0.5vh 0 0.5vh 1vw',
+          fontSize:font_size(vh, 1.5),
         }
       },
       MUIDataTableToolbar: {
           root: {
-            height:'6vh',
+            height:'7vh',
             minHeight:'0vh',
             maxHeight:'7vh',
             minWidth:'0px'
@@ -61,39 +63,39 @@ export default class EventObservationsTable extends Component{
 
       MuiTypography: {
             h6: {
-                fontSize: '1.5vh',
+                fontSize: font_size(vh, 1.5),
             }
             , caption: {
-                fontSize: '1.5vh'
+                fontSize: font_size(vh, 1.5)
             },
             body2:{
-              fontSize:'1.5vh',
+              fontSize:font_size(vh, 1.5),
               margin:0
             }
         },
       MuiMenuItem: {
             root: {
-                fontSize: '1.5vh'
+                fontSize: font_size(vh, 1.5)
             }
         }
         , MuiChip: {
             label: {
-                fontSize: '1.5vh'
+                fontSize: font_size(vh, 1.5)
             }
         }
         , MuiInputLabel: {
             root: {
-                fontSize: '1.5vh'
+                fontSize: font_size(vh, 1.5)
             }
         }
         , MuiTooltip: {
             tooltip: {
-                fontSize: '1.5vh'
+                fontSize: font_size(vh, 1.5)
             }
         }
         , MuiInputBase: {
             input: {
-                fontSize: '1.5vh',
+                fontSize: font_size(vh, 1.5),
             }
         }
 
@@ -146,7 +148,7 @@ export default class EventObservationsTable extends Component{
     }
   }
 
-  getColumns=(type)=>{
+  getColumns=(type, vh)=>{
     if (type=='meteo'){
 
       const columns = [
@@ -155,7 +157,7 @@ export default class EventObservationsTable extends Component{
                       label: "ID метеостанции",
                       options: {
                        filter: true,
-                       setCellProps: () => ({ style: { fontSize: "1.5vh" } })
+                       setCellProps: () => ({ style: { fontSize: font_size(vh, 1.5) } })
                       },
 
                      },
@@ -164,7 +166,7 @@ export default class EventObservationsTable extends Component{
                       label: "Дата",
                       options: {
                        filter: false,
-                       setCellProps: () => ({ style: { fontSize: "1.5vh" } })
+                       setCellProps: () => ({ style: { fontSize: font_size(vh, 1.5) } })
                       },
                      },
                      {
@@ -172,7 +174,7 @@ export default class EventObservationsTable extends Component{
                       label: "Температура воздуха, C",
                       options: {
                        filter: false,
-                       setCellProps: () => ({ style: { fontSize: "1.5vh" } })
+                       setCellProps: () => ({ style: { fontSize: font_size(vh, 1.5) } })
                       },
                      },
                       {
@@ -180,7 +182,7 @@ export default class EventObservationsTable extends Component{
                       label: "Количество осадков, мм",
                       options: {
                        filter: false,
-                       setCellProps: () => ({ style: { fontSize: "1.5vh" } })
+                       setCellProps: () => ({ style: { fontSize: font_size(vh, 1.5) } })
                       },
                      },
                      
@@ -239,9 +241,8 @@ export default class EventObservationsTable extends Component{
 
   render(){
 
-const columns=this.getColumns(this.props.type)  
-
-
+const vh = window.innerHeight;
+const columns=this.getColumns(this.props.type, vh) 
 
 const placeNameHeader=this.getHeader(this.props.type)
 const options = {
@@ -262,7 +263,7 @@ const options = {
   fixedHeader: true
 };
   return(
-    <MuiThemeProvider theme={this.getMuiTheme()}>
+    <MuiThemeProvider theme={this.getMuiTheme(vh)}>
         <MUIDataTable 
           title={placeNameHeader}
           data={this.getData(this.props.observations, this.props.stationId, this.props.type)}
