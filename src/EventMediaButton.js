@@ -6,11 +6,11 @@ import EditIcon from '@material-ui/icons/Edit';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import NavigationIcon from '@material-ui/icons/Navigation';
 import PhotoLibraryIcon from '@material-ui/icons/PhotoLibrary';
+import {font_size} from './system_functions.js'
 
 const useStyles = makeStyles(theme => ({
   fab: {
     margin: '1vw',
-    height: '6.8vh',
     background: '#1D8A6B',
     borderRadius: 35,
     '&:hover': {
@@ -27,13 +27,14 @@ const useStyles = makeStyles(theme => ({
 
 export default function EventMediaButton(props) {
   const classes = useStyles();
+  const vh = window.innerHeight
 
   return (
     <div style={{float: 'right'}}>
 
-      <Fab variant="extended" className={classes.fab} onClick={()=>props.dialogOpen()}>
-        <PhotoLibraryIcon className={classes.extendedIcon} />        
-        <span style={{ fontSize: '1.5vh' }}>Медиафайлы</span>
+      <Fab variant="extended" style={{height: font_size(vh, 6.8)}} className={classes.fab} onClick={()=>props.dialogOpen()}>
+        <PhotoLibraryIcon style={{height: font_size(vh, 2.5)}} className={classes.extendedIcon} />        
+        <span style={{ fontSize: font_size(vh, 1.5) }}>Медиафайлы</span>
       </Fab>
 
     </div>

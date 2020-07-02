@@ -5,6 +5,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import {font_size} from './system_functions.js'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -14,7 +15,6 @@ const useStyles = makeStyles(theme => ({
   formControl: {
     margin: '0 0 0 5%',
     minWidth: 0,
-    height: '5.58vh',
     minHeight: 0,
 
   },
@@ -25,6 +25,7 @@ export default function SimpleSelect(props) {
   const classes = useStyles();
   const stationType=props.stationType;
   const valueType=props.valueType
+  const vh = window.innerHeight;
   
  
   const handleChange = event => {
@@ -40,16 +41,16 @@ export default function SimpleSelect(props) {
    
   			}
   	return (
-      <FormControl className={classes.formControl}>
+      <FormControl style={{height: font_size(vh, 5.58)}} className={classes.formControl}>
 
-        <Select style={{height:'5.58vh'}}
+        <Select style={{height: font_size(vh, 5.58)}}
           value={valueType}
           onChange={handleChange}
           
 		>
 
-          <MenuItem value={'water_discharge'}>{<span style={{ fontSize: '1.8vh' }}>Расход воды</span>}</MenuItem>
-          <MenuItem value={'water_level'}>{<span style={{ fontSize: '1.8vh' }}>Уровень воды</span>}</MenuItem>
+          <MenuItem value={'water_discharge'}>{<span style={{ fontSize: font_size(vh, 1.8) }}>Расход воды</span>}</MenuItem>
+          <MenuItem value={'water_level'}>{<span style={{ fontSize: font_size(vh, 1.8) }}>Уровень воды</span>}</MenuItem>
 
         </Select>
         
@@ -63,16 +64,16 @@ export default function SimpleSelect(props) {
 
   			}
 	  	return (
-	      <FormControl className={classes.formControl}>
+	      <FormControl style={{height: font_size(vh, 5.58)}} className={classes.formControl}>
 
-	        <Select style={{height:'5.58vh'}}
+	        <Select style={{height: font_size(vh, 5.58)}}
 	          value={valueType}
 	          onChange={handleChange}
 	          
 			>
 
-	          <MenuItem value={'air_temperature'}>{<span style={{ fontSize: '1.8vh' }}>Температура воздуха</span>}</MenuItem>
-	          <MenuItem value={'precipitations'}>{<span style={{ fontSize: '1.8vh' }}>Количество осадков</span>}</MenuItem>
+	          <MenuItem value={'air_temperature'}>{<span style={{ fontSize: font_size(vh, 1.8) }}>Температура воздуха</span>}</MenuItem>
+	          <MenuItem value={'precipitations'}>{<span style={{ fontSize: font_size(vh, 1.8) }}>Количество осадков</span>}</MenuItem>
 
 	        </Select>
 	        

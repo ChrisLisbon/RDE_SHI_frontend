@@ -12,8 +12,9 @@ import EventInfoText from './EventInfoText'
 import ThemeProvider  from '@material-ui/styles/ThemeProvider';
 import ZeroPadding from './ZeroPadding.js'
 import EventObservationsTable from './EventObservationsTable.js'
-
 import InfoPopover from './InfoPopover.js'
+import {font_size} from './system_functions.js'
+
 var moment = require('moment');
 moment().format();
 
@@ -60,26 +61,20 @@ const useStyles = makeStyles(theme => ({
   bar:{
     backgroundColor:'#1D8A6B',
     minHeight: 0,
-    height: '5.58vh',
 
   },
   bar2:{
     backgroundColor:'#1D8A6B',
     minHeight: 0,
-    height: '5.58vh',
 
   },
   barlabel:{
-    height:'5.58vh',
     minHeight: 0,
     width: '20%',
     minWidth:'50px'
   },
    label:{
-    fontSize:'1.8vh',
-    height:'5.58vh',
     minHeight: 0,
-    padding:'1.39vh 0 2.39vh'
   }
 }));
 
@@ -87,10 +82,7 @@ export default function DiagramCard(props) {
   const stationId = props.clickedStationId
   const stationType = props.clickedStationType
   const eventData = props.eventData
-  
-
-
-
+  const vh = window.innerHeight;
   const dataStart=moment(eventData.event_start_date, 'DDMMYYYYTHHmmss').format('DD.MM.YYYY')
   const dataEnd=moment(eventData.event_end_date, 'DDMMYYYYTHHmmss').format('DD.MM.YYYY')
 
@@ -279,11 +271,12 @@ const sortedDict=eventData.meteo_observations.map((meteo_observations)=>{
       {props.setDrawerWidth()}
     }
   
+
     return (
     <div className={classes.root}>
-      <AppBar className={classes.bar} position="static">
+      <AppBar style={{height: font_size(vh, 5.58)}} className={classes.bar} position="static">
         
-          <Tabs className={classes.bar2} value={state.value} onChange={handleChangeTabs} indicatorColor="primary">
+          <Tabs style={{height: font_size(vh, 5.58)}} className={classes.bar2} value={state.value} onChange={handleChangeTabs} indicatorColor="primary">
          <InfoPopover name={eventData.name_rus}
                          dataStart={dataStart}
                          dataEnd={dataEnd}
@@ -296,9 +289,9 @@ const sortedDict=eventData.meteo_observations.map((meteo_observations)=>{
                          meanSpeed={eventData.mean_speed}
                          reason={eventData.reason}/>
           
-          <Tab className={classes.barlabel}label={<span style={{ fontSize: '1.5vh' }}>График</span>} {...a11yProps(1)} />
-          <Tab className={classes.barlabel}label={<span style={{ fontSize: '1.5vh' }}>Таблица</span>} {...a11yProps(2)} />
-          <Typography className={classes.label}  variant="body1" component="p">Выберите тип данных:</Typography>
+          <Tab style={{height: font_size(vh, 5.58)}} className={classes.barlabel}label={<span style={{ fontSize: font_size(vh, 1.5)}}>График</span>} {...a11yProps(1)} />
+          <Tab style={{height: font_size(vh, 5.58)}} className={classes.barlabel}label={<span style={{ fontSize: font_size(vh, 1.5)}}>Таблица</span>} {...a11yProps(2)} />
+          <Typography style={{fontSize: font_size(vh, 1.8), height: font_size(vh, 5.58), paddingTop: font_size(vh, 1.39), paddingBottom: font_size(vh, 2.39)}} className={classes.label}  variant="body1" component="p">Выберите тип данных:</Typography>
           <SimpleSelect stationType = {stationType}  setValueType={(valueType)=>setValueType(valueType)} valueType={valueType} 
           setNewValueTypeAfterChangingStationType={()=>setNewValueTypeAfterChangingStationType()}/>
           
