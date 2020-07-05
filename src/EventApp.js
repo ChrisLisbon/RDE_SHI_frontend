@@ -348,7 +348,7 @@ getMuiTheme2 = (vh) => createMuiTheme({
 	returnAutoComp=(state, vh)=>{
 			if (state==true){
 					return <div style={{display:'inline-block', float:'right', width:'17vw', margin: '1vw '}}>
-							<Card style={{padding:'1.3vh 0.5vw 0.5vh 0.5vw ', position: "relative", zIndex:2000}}>
+							<Card style={{padding:'1.3vh 0.5vw 0.5vh 0.5vw ', position: "relative", zIndex:900}}>
 								<MuiThemeProvider theme={this.getMuiTheme2(vh)}>
 				                <Autocomplete style={{height: font_size(vh, 5)}}
 				                    value={this.state.clickedStationObj}             

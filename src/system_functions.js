@@ -6,7 +6,7 @@ const font_size=(vh, value, flag=null)=>{
       return String(9.2*value)+'px'
     }
     if (vh<920 && flag=='text'){
-      return String(9.2*value)*0.8+'px'
+      return String(9.2*value)*0.9+'px'
     }
   }
 
