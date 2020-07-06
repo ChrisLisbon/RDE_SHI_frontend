@@ -16,6 +16,12 @@ import {
 import MomentUtils from '@date-io/moment';
 import DateFnsUtils from '@date-io/date-fns';
 import LuxonUtils from '@date-io/luxon';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+import CancelIcon from '@material-ui/icons/Cancel';
+import { green,red } from '@material-ui/core/colors';
 
 import {postMediaLink} from './request_functions.js'
 var moment = require('moment');
@@ -60,6 +66,8 @@ export default function AdminMediaLinksBlock(props) {
       description_eng:'',
       checked: false,
       
+      logDialog:false,
+      logDialogMessage:null
       });
 
   const linkInfo =()=>{
@@ -123,16 +131,54 @@ export default function AdminMediaLinksBlock(props) {
   const handleStartDateChange = date => {
     setState({...state, news_date: date});
   };
-
- const pushNewLink=()=>{
-  if (linkInfo()[0].info_agency!==''&&linkInfo()[0].news_date!==null&&linkInfo()[0].url!==''&& linkInfo()[0].name_rus!==''&&linkInfo()[0].name_eng!==''&&linkInfo()[0].description_rus!==''&&linkInfo()[0].description_eng!==''&&linkInfo()[0].lang!==''){
-    postMediaLink(form, props.login, props.password).then(data=>{console.log(data);
-        props.closeDialog('media_links_list')}
-        )
- }
-}
-  
-
+  const openLogDialog=(message)=>{
+    setState({...state, logDialogMessage: message,
+                        logDialog: true});
+  }
+  const closeLogDialog=()=>{
+    console.log()
+    if (state.logDialogMessage.status=='ok'){
+      props.closeDialog('media_links_list')
+    }
+    setState({...state, logDialog: false,
+                        logDialogMessage: null});
+    }
+  const pushNewLink=()=>{
+    if (linkInfo()[0].info_agency!==''&&linkInfo()[0].news_date!==null&&linkInfo()[0].url!==''&& linkInfo()[0].name_rus!==''&&linkInfo()[0].name_eng!==''&&linkInfo()[0].description_rus!==''&&linkInfo()[0].description_eng!==''&&linkInfo()[0].lang!==''){
+      postMediaLink(form, props.login, props.password).then(data=>{openLogDialog(data)})
+  }
+  }
+  const returnLog=()=>{
+    if (state.logDialogMessage!=null){
+      if (state.logDialogMessage.status=='ok'){
+        return <div>                      
+                    <DialogContent >
+                    <div style={{display: 'flex', justifyContent:"center"}}>
+                    <CheckCircleOutlineIcon style={{ color: green[500], fontSize: 40}}/>
+                    </div>
+                      <DialogContentText color="inherit" align='center' gutterBottom>
+                        Данные успешно добавлены
+                      </DialogContentText>
+                    </DialogContent>
+                </div>
+      }
+      if (state.logDialogMessage.status!='ok'){
+        return  <div>                      
+                    <DialogContent >
+                    <div style={{display: 'flex', justifyContent:"center"}}>
+                    <CancelIcon style={{ color: red[500], fontSize: 40}}/>
+                    </div>
+                      <DialogContentText color="inherit" align='center' gutterBottom>
+                      {state.logDialogMessage.status+': '+state.logDialogMessage.comment}
+                      </DialogContentText>
+                    </DialogContent>
+                </div>
+      }
+    }
+    else{
+      return null
+    }
+  }
   return (
     <div className={classes.box}>  
 
@@ -162,8 +208,11 @@ export default function AdminMediaLinksBlock(props) {
       <div className={classes.textfield2}></div>
       <Button variant="contained" color="primary" size="small" startIcon={<SendIcon />} style={{float: 'right'}}
                             onClick={()=>pushNewLink()}>Добавить</Button>
-
-            
+      <Dialog
+          open={state.logDialog}
+          onClose={()=>closeLogDialog()}>      
+          {returnLog()}
+      </Dialog>      
     </div>
       )
     }

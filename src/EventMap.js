@@ -63,8 +63,6 @@ addJsonToStateList=(id, data)=>{
 
 newactiveStationsLayer=(eventData, activeStationsLayer)=>{
 		if (activeStationsLayer==true){
-			console.log(eventData)
-			
 			var a=eventData.observation_stations.map((observation_stations) => {
 								var lat = observation_stations.lat
 								var lon = observation_stations.lon

@@ -23,6 +23,9 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { green,red } from '@material-ui/core/colors';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+import CancelIcon from '@material-ui/icons/Cancel';
 
 import {postVectorData} from './request_functions.js'
 var moment = require('moment');
@@ -63,12 +66,13 @@ export default function AdminVectorDataBlock(props) {
       file:'',
       source:'',
       vector_date:null,
-      extent:'',
       geojson_for_map:'',
       
       FileName:' ',
-      ExtentFileName:' ',
-      GeojsonFileName:' ',            
+      GeojsonFileName:' ', 
+      
+      logDialog:false,
+      logDialogMessage:null
       });
 
 
@@ -82,7 +86,6 @@ export default function AdminVectorDataBlock(props) {
     formData.append('source', state.source);
     formData.append('vector_date', moment(state.vector_date).format("DDMMYYYYTHHmmss"));
     formData.append('geojson_for_map', state.geojson_for_map);
-    formData.append('extent', state.extent);
     return formData
   }
   
@@ -112,14 +115,6 @@ export default function AdminVectorDataBlock(props) {
     setState({...state, vector_date: date});
   };
 
-  const set_extent=(file)=>{
-    setState({...state, extent: file,
-                        ExtentFileName:file.name});
-  }
-  const set_image_for_map=(file)=>{
-    setState({...state, image_for_map: file,
-                        ImageFileName: file.name});
-  }
   const set_file=(file)=>{
     setState({...state, file: file,
                         FileName:file.name});
@@ -135,19 +130,60 @@ export default function AdminVectorDataBlock(props) {
   const closeWaitingDialog=()=>{
     setState({...state, waitingDialog: false});
   }
+
+  const openLogDialog=(message)=>{
+    setState({...state, logDialogMessage: message,
+                        logDialog: true});
+  }
+  const closeLogDialog=()=>{
+    console.log()
+    if (state.logDialogMessage.status=='ok'){
+      props.closeDialog('vector_data_list')
+    }
+    setState({...state, logDialog: false,
+                        logDialogMessage: null});
+    }
+
 const pushNewVectorData=()=>{
   
   const form=vectorDataJson()
-  if(state.name_rus!==''&&state.name_eng!==''&&state.description_rus!==''&&state.description_eng!==''&&state.file!==''&&state.geojson_for_map!==''&&state.source!==''&&state.vector_date!==null&&state.extent!==''){
+  if(state.name_rus!==''&&state.name_eng!==''&&state.description_rus!==''&&state.description_eng!==''&&state.file!==''&&state.geojson_for_map!==''&&state.source!==''&&state.vector_date!==null){
     openWaitingDialog()
-    postVectorData(form, props.login, props.password).then(data=>{console.log(data);closeWaitingDialog();
-        props.closeDialog('vector_data_list')})
+    postVectorData(form, props.login, props.password).then(data=>{closeWaitingDialog();openLogDialog(data)})
   }
 }
   
-
-
-
+const returnLog=()=>{
+  if (state.logDialogMessage!=null){
+    if (state.logDialogMessage.status=='ok'){
+      return <div>                      
+                  <DialogContent >
+                  <div style={{display: 'flex', justifyContent:"center"}}>
+                  <CheckCircleOutlineIcon style={{ color: green[500], fontSize: 40}}/>
+                  </div>
+                    <DialogContentText color="inherit" align='center' gutterBottom>
+                      Данные успешно добавлены
+                    </DialogContentText>
+                  </DialogContent>
+              </div>
+    }
+    if (state.logDialogMessage.status!='ok'){
+      return  <div>                      
+                  <DialogContent >
+                  <div style={{display: 'flex', justifyContent:"center"}}>
+                  <CancelIcon style={{ color: red[500], fontSize: 40}}/>
+                  </div>
+                    <DialogContentText color="inherit" align='center' gutterBottom>
+                    {state.logDialogMessage.status+': '+state.logDialogMessage.comment}
+                    </DialogContentText>
+                  </DialogContent>
+              </div>
+    }
+  }
+  else{
+    return null
+  }
+}
   return (
     <div className={classes.box}>
       <TextField className={classes.textfield} value={state.name_rus} onChange={(event)=>set_name_rus(event)}  id="name_rus" label="Название (рус)"/>
@@ -182,7 +218,7 @@ const pushNewVectorData=()=>{
                     Выберите файл
                     <input type="file" style={{ display: "none" }} onChange={(e)=>set_file(e.target.files[0])}/>
                    </Button> 
-                   <TextField style={{ width: "68%", margin: '0 0 0 2%'}} value={state.FileName} label="Исходный файл"/>
+                   <TextField style={{ width: "68%", margin: '0 0 0 2%'}} value={state.FileName} label="Исходный файл(kml, dxf, geojson, csv, gpkg, svg, tar, zip, rar)"/>
 
      <Button
                       variant="outlined"
@@ -196,17 +232,7 @@ const pushNewVectorData=()=>{
                    <TextField style={{ width: "68%", margin: '0 0 0 2%'}} value={state.GeojsonFileName} label="Файл .geojson для наложения на карту"/>
 
       <TextField className={classes.textfield} value={state.source} onChange={(event)=>set_sourse(event)}  id="source" label="Источник"/>              
-
-              <Button
-                      variant="outlined"
-                      component="label"
-                      size="small"
-                      style={{ width: "30%", margin:'1% 0 0 0'  }}
-                    >
-                    Выберите файл
-                    <input type="file" style={{ display: "none" }} onChange={(e)=>set_extent(e.target.files[0])}/>
-                   </Button> 
-                   <TextField style={{ width: "68%", margin: '0 0 0 2%'}} value={state.ExtentFileName} label="Охват изображения .geojson"/> 
+               
 
               <Button variant="contained" color="primary" size="small" startIcon={<SendIcon />} style={{float: 'right'}}
                                     onClick={()=>pushNewVectorData()}>Добавить</Button>
@@ -226,7 +252,11 @@ const pushNewVectorData=()=>{
         </Typography>
       </DialogContent>
       </Dialog>
-
+      <Dialog
+          open={state.logDialog}
+          onClose={()=>closeLogDialog()}>      
+          {returnLog()}
+      </Dialog> 
     </div>
   )
 }

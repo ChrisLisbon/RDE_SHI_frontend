@@ -207,7 +207,6 @@ const sortedDict=eventData.meteo_observations.map((meteo_observations)=>{
 
     const listLables=sortedDict.map((el)=>{
       console.log('sortedDict')
-      console.log(sortedDict)
       return el.date
     })
     const firstParameter=sortedDict.map((el)=>{

@@ -23,6 +23,9 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { green,red } from '@material-ui/core/colors';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+import CancelIcon from '@material-ui/icons/Cancel';
 
 import {postMultimediaRecordsData, MultimediaRecordsTypesListGet} from './request_functions.js'
 
@@ -67,7 +70,9 @@ export default function AdminMultimediaRecordsDataBlock(props) {
       record_localization:'',
 
       FileName:' ',
-         
+      
+      logDialog:false,
+      logDialogMessage:null
       });
 
 
@@ -146,13 +151,25 @@ export default function AdminMultimediaRecordsDataBlock(props) {
   const closeWaitingDialog=()=>{
     setState({...state, waitingDialog: false});
   }
+
+  const openLogDialog=(message)=>{
+    setState({...state, logDialogMessage: message,
+                        logDialog: true});
+  }
+  const closeLogDialog=()=>{
+    console.log()
+    if (state.logDialogMessage.status=='ok'){
+      props.closeDialog('multimedia_records_data_list')
+    }
+    setState({...state, logDialog: false,
+                        logDialogMessage: null});
+    }
 const pushNewMultimediaRecordsData=()=>{
   
   const form=multimediaRecordsDataJson()
   if(state.name_rus!==''&&state.name_eng!==''&&state.description_rus!==''&&state.description_eng!==''&&state.file!==''&&state.source!==''&&state.type!==''&&state.type_id!==''&&state.record_localization!==''){
     openWaitingDialog()
-    postMultimediaRecordsData(form, props.login, props.password).then(data=>{closeWaitingDialog();
-        props.closeDialog('multimedia_records_data_list')})
+    postMultimediaRecordsData(form, props.login, props.password).then(data=>{closeWaitingDialog();openLogDialog(data)})
   }
 }
   
@@ -172,8 +189,37 @@ if (state.firstDataGet==false){
   MultimediaRecordsTypesListGet().then(data=>setState({...state, types_list: data,
                                                                  firstDataGet:true}))
 }
-
-
+const returnLog=()=>{
+  if (state.logDialogMessage!=null){
+    if (state.logDialogMessage.status=='ok'){
+      return <div>                      
+                  <DialogContent >
+                  <div style={{display: 'flex', justifyContent:"center"}}>
+                  <CheckCircleOutlineIcon style={{ color: green[500], fontSize: 40}}/>
+                  </div>
+                    <DialogContentText color="inherit" align='center' gutterBottom>
+                      Данные успешно добавлены
+                    </DialogContentText>
+                  </DialogContent>
+              </div>
+    }
+    if (state.logDialogMessage.status!='ok'){
+      return  <div>                      
+                  <DialogContent >
+                  <div style={{display: 'flex', justifyContent:"center"}}>
+                  <CancelIcon style={{ color: red[500], fontSize: 40}}/>
+                  </div>
+                    <DialogContentText color="inherit" align='center' gutterBottom>
+                    {state.logDialogMessage.status+': '+state.logDialogMessage.comment}
+                    </DialogContentText>
+                  </DialogContent>
+              </div>
+    }
+  }
+  else{
+    return null
+  }
+}
   return (
     <div className={classes.box}>
       <TextField className={classes.textfield} value={state.name_rus} onChange={(event)=>set_name_rus(event)}  id="name_rus" label="Название (рус)"/>
@@ -203,7 +249,7 @@ if (state.firstDataGet==false){
                     Выберите файл
                     <input type="file" style={{ display: "none" }} onChange={(e)=>set_file(e.target.files[0])}/>
                    </Button> 
-                   <TextField style={{ width: "68%", margin: '0 0 0 2%'}} value={state.FileName} label="Файл"/>
+                   <TextField style={{ width: "68%", margin: '0 0 0 2%'}} value={state.FileName} label="Файл(png, tif, jpeg, jpg, svg, mp4, avi)"/>
            
 
 
@@ -224,6 +270,11 @@ if (state.firstDataGet==false){
           Сохранение...
         </Typography>
       </DialogContent>
+      </Dialog> 
+      <Dialog
+          open={state.logDialog}
+          onClose={()=>closeLogDialog()}>      
+          {returnLog()}
       </Dialog>          
     </div>
   )

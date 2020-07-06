@@ -23,6 +23,9 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { green,red } from '@material-ui/core/colors';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+import CancelIcon from '@material-ui/icons/Cancel';
 
 import {postRasterData} from './request_functions.js'
 var moment = require('moment');
@@ -73,7 +76,9 @@ export default function AdminRasterDataBlock(props) {
       LegendFileName:' ',
       ExtentFileName:' ',  
 
-      waitingDialog: false,          
+      waitingDialog: false, 
+      logDialog:false,
+      logDialogMessage:null         
       });
 
   const returnParsedExtent=(string)=>{
@@ -152,21 +157,58 @@ export default function AdminRasterDataBlock(props) {
   const closeWaitingDialog=()=>{
     setState({...state, waitingDialog: false});
   }
-
+  const openLogDialog=(message)=>{
+    setState({...state, logDialogMessage: message,
+                        logDialog: true});
+  }
+  const closeLogDialog=()=>{
+    console.log()
+    if (state.logDialogMessage.status=='ok'){
+      props.closeDialog('raster_data_list')
+    }
+    setState({...state, logDialog: false,
+                        logDialogMessage: null});
+    }
 const pushNewRasterData=()=>{
   
   const form=rasterDataJson()
-  if(state.name_rus!==''&&state.name_eng!==''&&state.description_rus!==''&&state.description_eng!==''&&state.image_for_map!==''&&state.image_for_map_extent!==''&&state.file!==''&&state.legend_file!==''&&state.source!==''&&state.image_date!==null&&state.extent!==''){
+  if(state.name_rus!==''&&state.name_eng!==''&&state.description_rus!==''&&state.description_eng!==''&&state.image_for_map!==''&&state.image_for_map_extent!==''&&state.file!==''&&state.source!==''&&state.image_date!==null&&state.extent!==''){
     openWaitingDialog()
     console.log(rasterDataJson)
-    postRasterData(form, props.login, props.password).then(data=>{closeWaitingDialog();
-        props.closeDialog('raster_data_list')})
+    postRasterData(form, props.login, props.password).then(data=>{closeWaitingDialog();openLogDialog(data)})
   }
 }
-  
-
-
-
+const returnLog=()=>{
+  if (state.logDialogMessage!=null){
+    if (state.logDialogMessage.status=='ok'){
+      return <div>                      
+                  <DialogContent >
+                  <div style={{display: 'flex', justifyContent:"center"}}>
+                  <CheckCircleOutlineIcon style={{ color: green[500], fontSize: 40}}/>
+                  </div>
+                    <DialogContentText color="inherit" align='center' gutterBottom>
+                      Данные успешно добавлены
+                    </DialogContentText>
+                  </DialogContent>
+              </div>
+    }
+    if (state.logDialogMessage.status!='ok'){
+      return  <div>                      
+                  <DialogContent >
+                  <div style={{display: 'flex', justifyContent:"center"}}>
+                  <CancelIcon style={{ color: red[500], fontSize: 40}}/>
+                  </div>
+                    <DialogContentText color="inherit" align='center' gutterBottom>
+                    {state.logDialogMessage.status+': '+state.logDialogMessage.comment}
+                    </DialogContentText>
+                  </DialogContent>
+              </div>
+    }
+  }
+  else{
+    return null
+  }
+}  
   return (
     <div className={classes.box}>
       <TextField className={classes.textfield} value={state.name_rus} onChange={(event)=>set_name_rus(event)}  id="name_rus" label="Название (рус)"/>
@@ -202,7 +244,7 @@ const pushNewRasterData=()=>{
                     Выберите файл
                     <input type="file" style={{ display: "none" }} onChange={(e)=>set_image_for_map(e.target.files[0])}/>
                    </Button> 
-                   <TextField style={{ width: "68%", margin: '0 0 0 2%'}} value={state.ImageFileName} label="Изображение для наложения на карту"/> 
+                   <TextField style={{ width: "68%", margin: '0 0 0 2%'}} value={state.ImageFileName} label="Изображение для наложения на карту(png, tif, jpeg, jpg, svg)"/> 
       
 
       <TextField className={classes.textfield} value={state.image_for_map_extent} onChange={(event)=>set_image_for_map_extent(event)}  id="image_for_map_extent" label="Охват изображения"/>
@@ -217,7 +259,7 @@ const pushNewRasterData=()=>{
                     Выберите файл
                     <input type="file" style={{ display: "none" }} onChange={(e)=>set_file(e.target.files[0])}/>
                    </Button> 
-                   <TextField style={{ width: "68%", margin: '0 0 0 2%'}} value={state.FileName} label="Исходный файл"/>
+                   <TextField style={{ width: "68%", margin: '0 0 0 2%'}} value={state.FileName} label="Исходный файл(png, tif, jpeg, jpg, svg, tar, zip, rar)"/>
 
      <Button
                       variant="outlined"
@@ -228,7 +270,7 @@ const pushNewRasterData=()=>{
                     Выберите файл
                     <input type="file" style={{ display: "none" }} onChange={(e)=>set_legend_file(e.target.files[0])}/>
                    </Button> 
-                   <TextField style={{ width: "68%", margin: '0 0 0 2%'}} value={state.LegendFileName} label="Файл с легендой"/>
+                   <TextField style={{ width: "68%", margin: '0 0 0 2%'}} value={state.LegendFileName} label="Файл с легендой(png, jpeg)"/>
 
       <TextField className={classes.textfield} value={state.source} onChange={(event)=>set_sourse(event)}  id="source" label="Источник"/>              
 
@@ -260,7 +302,11 @@ const pushNewRasterData=()=>{
         </Typography>
       </DialogContent>
       </Dialog>
-            
+      <Dialog
+          open={state.logDialog}
+          onClose={()=>closeLogDialog()}>      
+          {returnLog()}
+      </Dialog>        
     </div>
   )
 }

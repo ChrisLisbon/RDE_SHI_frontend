@@ -6,6 +6,12 @@ import { makeStyles } from '@material-ui/core/styles';
 import Icon from '@material-ui/core/Icon';
 import SendIcon from '@material-ui/icons/Send';
 import TextField from '@material-ui/core/TextField';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+import CancelIcon from '@material-ui/icons/Cancel';
+import { green,red } from '@material-ui/core/colors';
 
 import {postNewPlace} from './request_functions.js'
 
@@ -30,9 +36,6 @@ const useStyles = makeStyles(theme => ({
   },
 
 }));
-
-
-
 export default function AdminPlacesBlock(props){
 	const classes = useStyles();
 	const [state, setState] = React.useState({
@@ -44,9 +47,11 @@ export default function AdminPlacesBlock(props){
       polygon_geom:'',      
 
       FileName:' ',
-      point_geom_str:'',  
+      point_geom_str:'', 
+      
+      logDialog:false,
+      logDialogMessage:null
       });
-
 
   const placeDataJson=()=>{
     const formData = new FormData();
@@ -76,8 +81,6 @@ export default function AdminPlacesBlock(props){
       setState({ ...state, description_eng: event.target.value});
 
 }
-
-
 const set_point_geom=(event)=>{
       const string=event.target.value;      
       setState({ ...state, point_geom_str: string});
@@ -100,13 +103,57 @@ const set_point_geom=(event)=>{
                         FileName:file.name});
   }
 
+const openLogDialog=(message)=>{
+  setState({...state, logDialogMessage: message,
+                      logDialog: true});
+}
+const closeLogDialog=()=>{
+  console.log()
+  if (state.logDialogMessage.status=='ok'){
+    props.closeAddPlaceDialog()
+  }
+  setState({...state, logDialog: false,
+                      logDialogMessage: null});
+  }
 
 const pushNewPlaceData=()=>{
   
   const form=placeDataJson()
   console.log(form)
   if(state.name_rus!==''&&state.name_eng!==''&&state.description_rus!==''&&state.description_eng!==''&&state.point_geom!==''&&state.polygon_geom!==''){
-    postNewPlace(form, props.login, props.password).then(data=>{console.log(data);props.closeAddPlaceDialog()})
+    postNewPlace(form, props.login, props.password).then(data=>{openLogDialog(data)})
+  }
+}
+
+const returnLog=()=>{
+  if (state.logDialogMessage!=null){
+    if (state.logDialogMessage.status=='ok'){
+      return <div>                      
+                  <DialogContent >
+                  <div style={{display: 'flex', justifyContent:"center"}}>
+                  <CheckCircleOutlineIcon style={{ color: green[500], fontSize: 40}}/>
+                  </div>
+                    <DialogContentText color="inherit" align='center' gutterBottom>
+                      Данные успешно добавлены
+                    </DialogContentText>
+                  </DialogContent>
+              </div>
+    }
+    if (state.logDialogMessage.status!='ok'){
+      return  <div>                      
+                  <DialogContent >
+                  <div style={{display: 'flex', justifyContent:"center"}}>
+                  <CancelIcon style={{ color: red[500], fontSize: 40}}/>
+                  </div>
+                    <DialogContentText color="inherit" align='center' gutterBottom>
+                    {state.logDialogMessage.status+': '+state.logDialogMessage.comment}
+                    </DialogContentText>
+                  </DialogContent>
+              </div>
+    }
+  }
+  else{
+    return null
   }
 }
 
@@ -131,9 +178,12 @@ const pushNewPlaceData=()=>{
 
               <Button variant="contained" color="primary" size="small" startIcon={<SendIcon />} style={{float: 'right'}}
                                     onClick={()=>pushNewPlaceData()}>Добавить</Button>
-
-
-    
+      <Dialog
+          open={state.logDialog}
+          onClose={()=>closeLogDialog()}>
+      
+          {returnLog()}
+      </Dialog>    
     </div>
   )
 }

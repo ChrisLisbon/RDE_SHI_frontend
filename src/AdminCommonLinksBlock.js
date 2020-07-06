@@ -5,10 +5,15 @@ import Divider from '@material-ui/core/Divider';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { withStyles } from '@material-ui/core/styles';
-import { green } from '@material-ui/core/colors';
 import Button from '@material-ui/core/Button';
 import SendIcon from '@material-ui/icons/Send';
 import Typography from '@material-ui/core/Typography';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+import CancelIcon from '@material-ui/icons/Cancel';
+import { green,red } from '@material-ui/core/colors';
 
 import {postCommonLink} from './request_functions.js'
 
@@ -33,24 +38,19 @@ const useStyles = makeStyles(theme => ({
   },
 
 }));
-
-
-
-
-
 export default function AdminCommonLinksBlock(props) {
   const classes = useStyles();
   
-  const [state, setState] = React.useState({
-      
+  const [state, setState] = React.useState({      
       url: '',
       name_rus: '',
       name_eng:'',
       lang: '',
       description_rus:'',
-      description_eng:'',
+      description_eng:'',  
       
-      
+      logDialog:false,
+      logDialogMessage:null
       });
 
 
@@ -95,13 +95,54 @@ export default function AdminCommonLinksBlock(props) {
                              });   
       
   }
+  const openLogDialog=(message)=>{
+    setState({...state, logDialogMessage: message,
+                        logDialog: true});
+  }
+  const closeLogDialog=()=>{
+    console.log()
+    if (state.logDialogMessage.status=='ok'){
+      props.closeDialog('common_links_list')
+    }
+    setState({...state, logDialog: false,
+                        logDialogMessage: null});
+    }
   const pushNewLink=()=>{
     if(linkInfo[0].url!==''&&linkInfo[0].name_rus!==''&&linkInfo[0].name_eng!==''&&linkInfo[0].description_rus!==''&&linkInfo[0].description_eng!==''&&linkInfo[0].lang!==''){
-      postCommonLink(form, props.login, props.password).then(data=>
-        props.closeDialog('common_links_list')
-        )
+      postCommonLink(form, props.login, props.password).then(data=>{openLogDialog(data)})
       }
-}
+  }
+  const returnLog=()=>{
+    if (state.logDialogMessage!=null){
+      if (state.logDialogMessage.status=='ok'){
+        return <div>                      
+                    <DialogContent >
+                    <div style={{display: 'flex', justifyContent:"center"}}>
+                    <CheckCircleOutlineIcon style={{ color: green[500], fontSize: 40}}/>
+                    </div>
+                      <DialogContentText color="inherit" align='center' gutterBottom>
+                        Данные успешно добавлены
+                      </DialogContentText>
+                    </DialogContent>
+                </div>
+      }
+      if (state.logDialogMessage.status!='ok'){
+        return  <div>                      
+                    <DialogContent >
+                    <div style={{display: 'flex', justifyContent:"center"}}>
+                    <CancelIcon style={{ color: red[500], fontSize: 40}}/>
+                    </div>
+                      <DialogContentText color="inherit" align='center' gutterBottom>
+                      {state.logDialogMessage.status+': '+state.logDialogMessage.comment}
+                      </DialogContentText>
+                    </DialogContent>
+                </div>
+      }
+    }
+    else{
+      return null
+    }
+  }
   return (
     <div className={classes.box}>     
       
@@ -114,6 +155,11 @@ export default function AdminCommonLinksBlock(props) {
       <div className={classes.textfield2}></div>
       <Button variant="contained" color="primary" size="small" startIcon={<SendIcon />} style={{float: 'right'}}
                             onClick={()=>pushNewLink()}>Добавить</Button>     
+      <Dialog
+          open={state.logDialog}
+          onClose={()=>closeLogDialog()}>      
+          {returnLog()}
+      </Dialog>
     </div>
       )
     }

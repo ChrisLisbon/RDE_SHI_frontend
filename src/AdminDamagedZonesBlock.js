@@ -24,6 +24,9 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { green,red } from '@material-ui/core/colors';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+import CancelIcon from '@material-ui/icons/Cancel';
 
 import {postDamagedZone, DamagedZonesTypesGet} from './request_functions.js'
 var moment = require('moment');
@@ -68,12 +71,13 @@ export default function AdminCommonLinksBlock(props) {
       start_date:null,
       end_date:null,
       area:'',
-      geom:'',
-      
+      geom:'',      
       
       JSONFileName:' ',
       waitingDialog: false,
-            
+      
+      logDialog:false,
+      logDialogMessage:null
       });
 
 
@@ -154,14 +158,57 @@ export default function AdminCommonLinksBlock(props) {
   const closeWaitingDialog=()=>{
     setState({...state, waitingDialog: false});
   }
+
+  const openLogDialog=(message)=>{
+    setState({...state, logDialogMessage: message,
+                        logDialog: true});
+  }
+  const closeLogDialog=()=>{
+    console.log()
+    if (state.logDialogMessage.status=='ok'){
+      props.closeDialog('damaged_zones_list')
+    }
+    setState({...state, logDialog: false,
+                        logDialogMessage: null});
+    }
+
 const pushNewDamagedZone=()=>{
   if(state.type_id!==''&&state.type!==''&&state.description_rus!==''&&state.description_eng!==''&&state.cost_rub!==''&&state.start_date!==null&&state.end_date!==null&&state.area!==''&&state.geom!==''){
     openWaitingDialog()
-    postDamagedZone(form, props.login, props.password).then(data=>{closeWaitingDialog();
-        props.closeDialog('damaged_zones_list')})
+    postDamagedZone(form, props.login, props.password).then(data=>{closeWaitingDialog();openLogDialog(data)})
   }
 }
-  
+const returnLog=()=>{
+  if (state.logDialogMessage!=null){
+    if (state.logDialogMessage.status=='ok'){
+      return <div>                      
+                  <DialogContent >
+                  <div style={{display: 'flex', justifyContent:"center"}}>
+                  <CheckCircleOutlineIcon style={{ color: green[500], fontSize: 40}}/>
+                  </div>
+                    <DialogContentText color="inherit" align='center' gutterBottom>
+                      Данные успешно добавлены
+                    </DialogContentText>
+                  </DialogContent>
+              </div>
+    }
+    if (state.logDialogMessage.status!='ok'){
+      return  <div>                      
+                  <DialogContent >
+                  <div style={{display: 'flex', justifyContent:"center"}}>
+                  <CancelIcon style={{ color: red[500], fontSize: 40}}/>
+                  </div>
+                    <DialogContentText color="inherit" align='center' gutterBottom>
+                    {state.logDialogMessage.status+': '+state.logDialogMessage.comment}
+                    </DialogContentText>
+                  </DialogContent>
+              </div>
+    }
+  }
+  else{
+    return null
+  }
+}  
 if (state.firstDataGet==false){
         if (state.damZonesTypes == null){
         DamagedZonesTypesGet().then(data=>setState({ ...state, damZonesTypes: data}))    
@@ -244,7 +291,12 @@ if (state.firstDataGet==false){
           Сохранение...
         </Typography>
       </DialogContent>
-      </Dialog>     
+      </Dialog> 
+      <Dialog
+          open={state.logDialog}
+          onClose={()=>closeLogDialog()}>      
+          {returnLog()}
+      </Dialog>    
     </div>
   )
 }

@@ -23,6 +23,9 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { green,red } from '@material-ui/core/colors';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+import CancelIcon from '@material-ui/icons/Cancel';
 import { KeyboardDateTimePicker } from "@material-ui/pickers";
 
 import {postRemoteSensingData} from './request_functions.js'
@@ -88,7 +91,10 @@ export default function AdminRemoteSensingDataBlock(props) {
       ImageFileName:' ',
       FileName:' ',
       ExtentFileName:' ',
-      waitingDialog: false,           
+      waitingDialog: false,
+      
+      logDialog:false,
+      logDialogMessage:null
       });
 
   const returnParsedExtent=(string)=>{
@@ -158,19 +164,58 @@ export default function AdminRemoteSensingDataBlock(props) {
   const closeWaitingDialog=()=>{
     setState({...state, waitingDialog: false});
   }
+  const openLogDialog=(message)=>{
+    setState({...state, logDialogMessage: message,
+                        logDialog: true});
+  }
+  const closeLogDialog=()=>{
+    console.log()
+    if (state.logDialogMessage.status=='ok'){
+      props.closeDialog('remote_sensing_data_list')
+    }
+    setState({...state, logDialog: false,
+                        logDialogMessage: null});
+    }
+
 const pushNewRemoteSensingData=()=>{
   
   const form=remoteSensingDataJson()
   if(state.description_rus!==''&&state.description_eng!==''&&state.image_for_map!==''&&state.image_for_map_extent!==''&&state.file!==''&&state.sensor!==''&&state.source!==''&&state.image_date!==null){
     openWaitingDialog()
-    postRemoteSensingData(form, props.login, props.password).then(data=>{closeWaitingDialog();
-        props.closeDialog('remote_sensing_data_list')})
+    postRemoteSensingData(form, props.login, props.password).then(data=>{closeWaitingDialog();openLogDialog(data)})
   }
 }
-  
-
-
-
+const returnLog=()=>{
+  if (state.logDialogMessage!=null){
+    if (state.logDialogMessage.status=='ok'){
+      return <div>                      
+                  <DialogContent >
+                  <div style={{display: 'flex', justifyContent:"center"}}>
+                  <CheckCircleOutlineIcon style={{ color: green[500], fontSize: 40}}/>
+                  </div>
+                    <DialogContentText color="inherit" align='center' gutterBottom>
+                      Данные успешно добавлены
+                    </DialogContentText>
+                  </DialogContent>
+              </div>
+    }
+    if (state.logDialogMessage.status!='ok'){
+      return  <div>                      
+                  <DialogContent >
+                  <div style={{display: 'flex', justifyContent:"center"}}>
+                  <CancelIcon style={{ color: red[500], fontSize: 40}}/>
+                  </div>
+                    <DialogContentText color="inherit" align='center' gutterBottom>
+                    {state.logDialogMessage.status+': '+state.logDialogMessage.comment}
+                    </DialogContentText>
+                  </DialogContent>
+              </div>
+    }
+  }
+  else{
+    return null
+  }
+}
   return (
     <div className={classes.box}>
       <TextField className={classes.textfield} value={state.description_rus} onChange={(event)=>set_description_rus(event)}  id="description_rus" label="Описание (рус)"/>
@@ -201,7 +246,7 @@ const pushNewRemoteSensingData=()=>{
                     Выберите файл
                     <input type="file" style={{ display: "none" }} onChange={(e)=>set_image_for_map(e.target.files[0])}/>
                    </Button> 
-                   <TextField style={{ width: "68%", margin: '0 0 0 2%'}} value={state.ImageFileName} label="Изображение для наложения на карту"/> 
+                   <TextField style={{ width: "68%", margin: '0 0 0 2%'}} value={state.ImageFileName} label="Изображение для наложения на карту(png, tiff, tif, jpeg, jpg, bmp, svg)"/> 
       
 
       <TextField className={classes.textfield} value={state.image_for_map_extent} onChange={(event)=>set_image_for_map_extent(event)}  id="image_for_map_extent" label="Охват изображения"/>
@@ -216,7 +261,7 @@ const pushNewRemoteSensingData=()=>{
                     Выберите файл
                     <input type="file" style={{ display: "none" }} onChange={(e)=>set_file(e.target.files[0])}/>
                    </Button> 
-                   <TextField style={{ width: "68%", margin: '0 0 0 2%'}} value={state.FileName} label="Исходный файл"/>
+                   <TextField style={{ width: "68%", margin: '0 0 0 2%'}} value={state.FileName} label="Исходный файл(png, tiff, tif, jpeg, jpg, bmp, svg, tar, zip, rar)"/>
 
 
       <TextField className={classes.textfield} value={state.sensor} onChange={(event)=>set_sensor(event)}  id="sensor" label="Название сенсора"/>
@@ -248,7 +293,12 @@ const pushNewRemoteSensingData=()=>{
           Сохранение...
         </Typography>
       </DialogContent>
-      </Dialog>      
+      </Dialog>   
+      <Dialog
+          open={state.logDialog}
+          onClose={()=>closeLogDialog()}>      
+          {returnLog()}
+      </Dialog>   
     </div>
   )
 }
