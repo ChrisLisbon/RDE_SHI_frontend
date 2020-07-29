@@ -35,14 +35,11 @@ export default class Diagram extends React.Component {
           if (vh<920){
             const header_vh=64.4
             const f_tab_vh=(vh-64.4)/2
-            console.log(f_tab_vh)
-            console.log(f_tab_vh-51.336)
             return f_tab_vh-51.336
           }
         }
         options=(dict, vh)=> {
           const list = []
-          console.log(dict.dangerValues)
           if (dict.Parameter!==undefined){              
               dict.dangerValues.forEach((el)=>{   
                 console.log(el)             
@@ -57,7 +54,6 @@ export default class Diagram extends React.Component {
                                   text: el.description
                                 }}
                 list.push(oneDict)
-                console.log(list)
               })}
         
         return {
